@@ -27,6 +27,11 @@ STATS = (
     ("15.9M", "GTA VI ORDERS"), ("200,000", "FLEE AKVAN"),
     ("730,000", "ICJ CASE"), ("19", "SIBERIA CRASH"),
 )
+PAGE_NUMBERS = (
+    ("3 leaders", "Shenzhen"), ("48 hrs", "COP31 left"),
+    ("$1.5B", "GTA VI day one"), ("11 districts", "on red alert"),
+    ("27 yrs", "Trump plot sentence"), ("251-11", "Jeffries vote"),
+)
 STORIES = (
     ("SHENZHEN", "Three leaders, one table",
      "Trump presses nuclear arms control; Xi calls for open trade; Putin arrives with Ukraine unresolved. "
@@ -156,6 +161,7 @@ def header(draw):
               font=font("Serif-Bold", 40), fill=INK, anchor="lt")
     if block(draw, LEFT, 161, DEK, font("Serif", 15), WIDTH, 18, INK) != 2:
         raise ValueError("The lead dek must fill two lines")
+    draw.rectangle((LEFT, 196, RIGHT, 197), fill=RED)
 
     draw.rectangle((LEFT, 204, RIGHT, 253), fill=INK)
     for index, (number, caption) in enumerate(STATS):
@@ -211,9 +217,11 @@ def globe(img):
                (533, 445), (573, 419), (602, 362), (649, 409))
     for x, y in beacons:
         draw.line((cx, table_y, x, y), fill=RED)
-    for x, y in beacons:
+    for number, (x, y) in enumerate(beacons, start=1):
         draw.ellipse(ellipse(x, y, 4), fill=PAPER, outline=RED)
         draw.ellipse(ellipse(x, y, 2), fill=RED)
+        draw.text((x + 8, y), str(number), font=font("SansMono-Bold", 9), fill=RED,
+                  anchor="lm", stroke_width=1, stroke_fill=PAPER)
 
     draw.ellipse(ellipse(cx, table_y, 63, 16), fill=PAPER, outline=INK, width=3)
     draw.ellipse(ellipse(cx, table_y, 56, 10), outline=GRAY)
@@ -224,17 +232,33 @@ def globe(img):
         dx, dy = {"US": (15, 0), "CN": (16, 0), "RU": (-16, 0)}[label]
         draw.text((x + dx, y + dy), label, font=font("SansMono-Bold", 10),
                   fill=RED, anchor="mm")
-    draw.text((cx, 570), "SHENZHEN, 8 P.M. — three leaders meet. Red dots mark other news.",
+    draw.text((cx, 570),
+              "SHENZHEN, 8 P.M. — three chairs, one table; numbered red marks mark the day's other fronts",
               font=font("SansMono", 9), fill=GRAY, anchor="mt")
 
 
+def numbers_strip(draw):
+    top, bottom = 581, 604
+    draw.line((LEFT, top, RIGHT, top), fill=INK)
+    draw.line((LEFT, bottom, RIGHT, bottom), fill=INK)
+    draw.text((LEFT, 590), "THE PAGE IN NUMBERS",
+              font=font("SansMono-Bold", 9), fill=INK, anchor="lt")
+    facts_left = LEFT + 126
+    cell_width = (RIGHT - facts_left) / len(PAGE_NUMBERS)
+    for index, (number, label) in enumerate(PAGE_NUMBERS):
+        x = round(facts_left + index * cell_width)
+        draw.line((x, 585, x, 600), fill=LIGHT)
+        center = x + cell_width / 2
+        draw.text((center, 584), number, font=font("SansMono-Bold", 9), fill=INK, anchor="mt")
+        draw.text((center, 594), label, font=font("SansMono", 9), fill=INK, anchor="mt")
+
+
 def story_grid(draw):
-    top, bottom = 588, 962
+    top, bottom = 605, 961
     gutter = 14
     column_width = (WIDTH - 3 * gutter) / 4
     row_height = (bottom - top) / 4
     highlights = {1, 2, 3, 7, 9}
-    draw.line((LEFT, top, RIGHT, top), fill=INK, width=2)
     for column in range(4):
         x = round(LEFT + column * (column_width + gutter))
         edge = round(LEFT + column * (column_width + gutter) + column_width)
@@ -244,31 +268,33 @@ def story_grid(draw):
             index = 4 * row + column
             number = index + 1
             dateline, headline, body = STORIES[index]
-            y = round(top + row * row_height) + 9
+            y = round(top + row * row_height) + 6
             accent = RED if number in highlights else INK
             draw.rectangle((x, y, x + 19, y + 13), fill=accent)
             draw.text((x + 9.5, y + 7), f"{number:02}",
                       font=font("SansMono-Bold", 9), fill=PAPER, anchor="mm")
             draw.text((x + 25, y + 3), dateline, font=font("SansMono", 9),
                       fill=RED if number in highlights else GRAY, anchor="lt")
-            if block(draw, x, y + 20, headline, font("Serif-Bold", 13),
-                     edge - x, 14, INK) != 1:
+            if block(draw, x, y + 17, headline, font("Serif-Bold", 14),
+                     edge - x, 15, INK) != 1:
                 raise ValueError(f"Headline exceeds its column: {headline}")
-            block(draw, x, y + 39, body, font("Sans", 9), edge - x, 11, BODY_INK, limit=4)
+            block(draw, x, y + 34, body, font("Sans", 10), edge - x, 10, BODY_INK, limit=5)
             if row < 3:
                 rule_y = round(top + (row + 1) * row_height)
                 draw.line((x, rule_y, edge, rule_y), fill=LIGHT)
 
 
 def footer(draw):
-    draw.rectangle((LEFT, 966, RIGHT, 997), outline=RED, width=2)
-    draw.text((LEFT + 9, 974), "DATE CHECK",
+    top = 964
+    padding = 10
+    draw.rectangle((LEFT, top, RIGHT, 1004), outline=RED, width=2)
+    draw.text((LEFT + padding, top + padding), "DATE CHECK",
               font=font("SansMono-Bold", 10), fill=RED, anchor="lt")
     copy_x = LEFT + 79
-    if block(draw, copy_x, 972, DATE_CHECK, font("SansMono", 9), RIGHT - copy_x - 9,
-             12, INK) != 2:
+    if block(draw, copy_x, top + padding, DATE_CHECK, font("SansMono", 10),
+             RIGHT - copy_x - padding, 11, INK) != 2:
         raise ValueError("The date check must fill two lines")
-    draw.text((SIZE // 2, 1008),
+    draw.text((SIZE // 2, 1014),
               "Every line here happened, or was first reported, on Thursday 19 November 2026. "
               "Drawn, set and written by an agent.",
               font=font("SansMono", 9), fill=GRAY, anchor="mm")
@@ -279,6 +305,7 @@ def main():
     draw = ImageDraw.Draw(img)
     header(draw)
     globe(img)
+    numbers_strip(draw)
     story_grid(draw)
     footer(draw)
     path = Path(__file__).with_name("entry.png")
