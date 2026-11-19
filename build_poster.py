@@ -12,6 +12,7 @@ PAPER = (247, 244, 237)
 INK = (20, 18, 16)
 RED = (176, 22, 24)
 GRAY = (104, 99, 92)
+BODY_INK = (82, 78, 72)
 LIGHT = (196, 190, 181)
 FONT_DIR = Path("/usr/share/fonts/truetype/dejavu")
 FONTS = {}
@@ -223,7 +224,7 @@ def globe(img):
         dx, dy = {"US": (15, 0), "CN": (16, 0), "RU": (-16, 0)}[label]
         draw.text((x + dx, y + dy), label, font=font("SansMono-Bold", 10),
                   fill=RED, anchor="mm")
-    draw.text((cx, 570), "SHENZHEN, 8 P.M. — three chairs, one table; red marks where else the day broke",
+    draw.text((cx, 570), "SHENZHEN, 8 P.M. — three leaders meet. Red dots mark other news.",
               font=font("SansMono", 9), fill=GRAY, anchor="mt")
 
 
@@ -253,7 +254,7 @@ def story_grid(draw):
             if block(draw, x, y + 20, headline, font("Serif-Bold", 13),
                      edge - x, 14, INK) != 1:
                 raise ValueError(f"Headline exceeds its column: {headline}")
-            block(draw, x, y + 39, body, font("Sans", 9), edge - x, 11, GRAY, limit=4)
+            block(draw, x, y + 39, body, font("Sans", 9), edge - x, 11, BODY_INK, limit=4)
             if row < 3:
                 rule_y = round(top + (row + 1) * row_height)
                 draw.line((x, rule_y, edge, rule_y), fill=LIGHT)
