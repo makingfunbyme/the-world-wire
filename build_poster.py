@@ -28,9 +28,9 @@ STATS = (
     ("730,000", "ICJ CASE"), ("19", "SIBERIA CRASH"),
 )
 PAGE_NUMBERS = (
-    ("5", "Java patch authorities"), ("7", "Sanctions targets"),
-    ("4", "Gulf flashpoints"), ("2", "Military ties work areas"),
-    ("40", "news briefs"), ("8", "globe beacons"),
+    ("3 leaders", "Shenzhen"), ("48 hrs", "COP31 left"),
+    ("$1.5B", "GTA VI pre-orders"), ("11 districts", "on red alert"),
+    ("$87B", "India renewables"), ("6 deaths", "Java bridge collapse"),
 )
 STORIES = (
     ("SHENZHEN", "Three leaders, one table",
@@ -102,26 +102,6 @@ STORIES = (
      "US stock futures climb ahead of Anthropic's Nasdaq debut as global shares trade mixed."),
     ("LOS ANGELES", "Jazz end Lakers' streak",
      "Utah beats Los Angeles 109–97, ending the Lakers' nine-game winning streak."),
-    ("SHENZHEN", "Trade on Xi's agenda",
-     "Xi calls for open trade as the summit opens with much of its agenda unresolved."),
-    ("HORMUZ", "Crude flows slow",
-     "Crude shipments through Hormuz fall as some tankers wait in the Gulf of Oman to load oil."),
-    ("KUWAIT AND BAHRAIN", "Air bases hit",
-     "Iran's strikes hit air bases in both Gulf states."),
-    ("TEHRAN", "Iran answers Gulf protests",
-     "After Gulf governments condemn the strikes, Tehran urges its neighbours to bar US attacks from their territory."),
-    ("ODISHA", "Schools and ports shut",
-     "Schools and ports close ahead of Cyclone Akvan's expected Friday landfall."),
-    ("MANAUS", "Amazon rivers stay low",
-     "Below-normal rain in Brazil's Amazonas state is expected to delay river recovery."),
-    ("BIKANER", "Grid battery expands",
-     "ACME Solar set Thursday as the start of commercial operation for new battery capacity in Rajasthan."),
-    ("CARACAS", "Training and intelligence",
-     "Training and intelligence sharing are part of the restored US–Venezuela military ties."),
-    ("SAN FRANCISCO", "Kress leads in interim",
-     "Kress runs Nvidia as interim chief after Huang's 12 November resignation."),
-    ("KYIV", "Rival claims over Donetsk",
-     "Zelensky rejects Moscow's battlefield account, saying Dobropillia and Kostiantynivka still hold."),
 )
 DATE_CHECK = (
     "Reported Wednesday 18 Nov, not Thursday news and left out above: House Democrats nominate "
@@ -284,7 +264,7 @@ def globe(img):
     img.paste(illustration, ((SIZE - illustration.width) // 2, 255))
     ImageDraw.Draw(img).text(
         (SIZE // 2, 469),
-        "SHENZHEN, 8 P.M. — three chairs, one table. Red marks trace other fronts.",
+        "SHENZHEN, 8 P.M. — three chairs, one table. Red marks trace the day's other fronts.",
         font=font("SansMono", 9), fill=GRAY, anchor="mt",
     )
 
@@ -312,8 +292,8 @@ def story_grid(draw):
     rows = (len(STORIES) + columns - 1) // columns
     column_width = (WIDTH - (columns - 1) * gutter) / columns
     row_height = (bottom - top) / rows
-    headline_font = font("Serif-Bold", 12)
-    body_font = font("Sans", 8)
+    headline_font = font("Serif-Bold", 13)
+    body_font = font("Sans", 9)
     highlights = {1, 2, 3, 7, 9}
     for column in range(columns):
         x = round(LEFT + column * (column_width + gutter))
@@ -326,17 +306,19 @@ def story_grid(draw):
                 break
             number = index + 1
             dateline, headline, body = STORIES[index]
-            y = round(top + row * row_height) + 1
+            y = round(top + row * row_height) + 2
             accent = RED if number in highlights else INK
-            draw.rectangle((x, y, x + 17, y + 7), fill=accent)
+            draw.rectangle((x, y, x + 17, y + 8), fill=accent)
             draw.text((x + 8.5, y + 4), f"{number:02}",
                       font=font("SansMono-Bold", 8), fill=PAPER, anchor="mm")
             draw.text((x + 22, y + 1), dateline, font=font("SansMono", 8),
                       fill=RED if number in highlights else GRAY, anchor="lt")
-            if block(draw, x, y + 9, headline, headline_font, edge - x, 12, INK) != 1:
+            if block(draw, x, y + 11, headline, headline_font, edge - x, 14, INK) != 1:
                 raise ValueError(f"Headline exceeds its column: {headline}")
-            max_lines = 3 if number <= 30 else 2
-            if block(draw, x, y + 21, body, body_font, edge - x, 8, BODY_INK, max_lines) > max_lines:
+            body_width = edge - x
+            max_lines = 4 if number <= 16 else 3
+            leading = 8 if len(wrap(body, body_font, body_width)) == 4 else 10
+            if block(draw, x, y + 24, body, body_font, body_width, leading, BODY_INK, max_lines) > max_lines:
                 raise ValueError(f"Body exceeds its allotted lines: {headline}")
             if row < rows - 1:
                 rule_y = round(top + (row + 1) * row_height)
