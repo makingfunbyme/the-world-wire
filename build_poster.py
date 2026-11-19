@@ -29,8 +29,8 @@ STATS = (
 )
 PAGE_NUMBERS = (
     ("3 leaders", "Shenzhen"), ("48 hrs", "COP31 left"),
-    ("$1.5B", "GTA VI day one"), ("11 districts", "on red alert"),
-    ("27 yrs", "Trump plot sentence"), ("251-11", "Jeffries vote"),
+    ("$1.5B", "GTA VI pre-orders"), ("11 districts", "on red alert"),
+    ("$87B", "India renewables"), ("6 deaths", "Java bridge collapse"),
 )
 STORIES = (
     ("SHENZHEN", "Three leaders, one table",
@@ -75,6 +75,34 @@ STORIES = (
      "China sacks a scientist after a six-year-old dies in a gene-editing trial, reviving the He Jiankui question."),
     ("NAIROBI", "Kenya's third term",
      "A court weighs a constitutional change; protests build as the government presses its case."),
+    ("MELBOURNE", "Allies pull out of a Qatari fund",
+     "Australia and the Netherlands withdraw from a Qatar-backed fund after revelations about a former prime minister."),
+    ("FRANKFURT", "Deutsche Bank raided",
+     "A search targets an Epi-pent-linked deal. The FT reports $82M in payments."),
+    ("BANGALORE", "India's renewables pledge",
+     "Prime Minister Modi commits $87B to renewables in India by 2030."),
+    ("WASHINGTON", "Senators warn on AI",
+     "A bipartisan group warns that AI cyber threats are outpacing defences."),
+    ("SYDNEY", "Bonds in a dead heat",
+     "England and Australia draw in the women's rugby tournament opener."),
+    ("DOHA", "Japan-China defence talks",
+     "Taki and Japan's defence minister meet Chinese counterparts for a 2x2 dialogue."),
+    ("TOKYO", "A soft-power farewell",
+     "Japan's popular defence minister steps down, shifting the cabinet's centre of gravity."),
+    ("JAKARTA", "A bridge collapses",
+     "Six die when a bridge on Java gives way days after a cement plant flood."),
+    ("CANBERRA", "Sanctions on settlers",
+     "Australia sanctions three people and four groups over West Bank settlements."),
+    ("GAMBIA", "A genocide case shifts",
+     "Ministers take over the ICJ's Rohingya text after The Gambia brought the 2017 case."),
+    ("ABUJA", "Nigeria's flood relief",
+     "Twelve die in a landslide as flood relief reaches the state."),
+    ("SANTA CLARA", "Chip halts stop",
+     "Nvidia's stop for a chip line upends the supply calendar a second time."),
+    ("PALO ALTO", "Nikesh Arora says no",
+     "The week's guesses are no coincidence: AI is passing expectations."),
+    ("WELLINGTON", "A Test begins",
+     "India and New Zealand open the first Test. The series is the last for two veterans."),
 )
 DATE_CHECK = (
     "Reported Wednesday 18 Nov, not Thursday news and left out above: House Democrats nominate "
@@ -174,7 +202,8 @@ def header(draw):
 
 
 def globe(img):
-    cx, cy, radius = 512, 435, 126
+    illustration = Image.new("RGB", (304, 314), PAPER)
+    cx, cy, radius = 152, 181, 126
     diameter = 2 * radius + 1
     layer = Image.new("RGBA", (diameter, diameter), PAPER + (255,))
     poles = (0, 0, diameter - 1, diameter - 1)
@@ -207,14 +236,14 @@ def globe(img):
 
     circular = Image.new("L", layer.size)
     ImageDraw.Draw(circular).ellipse(poles, fill=255)
-    img.paste(layer, (cx - radius, cy - radius), circular)
-    draw = ImageDraw.Draw(img)
+    illustration.paste(layer, (cx - radius, cy - radius), circular)
+    draw = ImageDraw.Draw(illustration)
     draw.ellipse(ellipse(cx, cy, radius + 4), outline=INK)
     draw.ellipse(ellipse(cx, cy, radius), outline=INK, width=2)
 
-    table_y = 291
-    beacons = ((379, 375), (435, 374), (460, 391), (481, 417),
-               (533, 445), (573, 419), (602, 362), (649, 409))
+    table_y = 37
+    beacons = ((19, 121), (75, 120), (100, 137), (121, 163),
+               (173, 191), (213, 165), (242, 108), (289, 155))
     for x, y in beacons:
         draw.line((cx, table_y, x, y), fill=RED)
     for number, (x, y) in enumerate(beacons, start=1):
@@ -232,54 +261,66 @@ def globe(img):
         dx, dy = {"US": (15, 0), "CN": (16, 0), "RU": (-16, 0)}[label]
         draw.text((x + dx, y + dy), label, font=font("SansMono-Bold", 10),
                   fill=RED, anchor="mm")
-    draw.text((cx, 570),
-              "SHENZHEN, 8 P.M. — three chairs, one table; numbered red marks mark the day's other fronts",
-              font=font("SansMono", 9), fill=GRAY, anchor="mt")
+    illustration = illustration.resize((204, 211), Image.Resampling.LANCZOS)
+    img.paste(illustration, ((SIZE - illustration.width) // 2, 255))
+    ImageDraw.Draw(img).text(
+        (SIZE // 2, 469),
+        "SHENZHEN, 8 P.M. — three chairs, one table. Red marks trace the day's other fronts.",
+        font=font("SansMono", 9), fill=GRAY, anchor="mt",
+    )
 
 
 def numbers_strip(draw):
-    top, bottom = 581, 604
+    top, bottom = 481, 504
     draw.line((LEFT, top, RIGHT, top), fill=INK)
     draw.line((LEFT, bottom, RIGHT, bottom), fill=INK)
-    draw.text((LEFT, 590), "THE PAGE IN NUMBERS",
+    draw.text((LEFT, top + 9), "THE PAGE IN NUMBERS",
               font=font("SansMono-Bold", 9), fill=INK, anchor="lt")
     facts_left = LEFT + 126
     cell_width = (RIGHT - facts_left) / len(PAGE_NUMBERS)
     for index, (number, label) in enumerate(PAGE_NUMBERS):
         x = round(facts_left + index * cell_width)
-        draw.line((x, 585, x, 600), fill=LIGHT)
+        draw.line((x, top + 4, x, bottom - 4), fill=LIGHT)
         center = x + cell_width / 2
-        draw.text((center, 584), number, font=font("SansMono-Bold", 9), fill=INK, anchor="mt")
-        draw.text((center, 594), label, font=font("SansMono", 9), fill=INK, anchor="mt")
+        draw.text((center, top + 3), number, font=font("SansMono-Bold", 9), fill=INK, anchor="mt")
+        draw.text((center, top + 13), label, font=font("SansMono", 9), fill=INK, anchor="mt")
 
 
 def story_grid(draw):
-    top, bottom = 605, 961
+    top, bottom = 505, 961
     gutter = 14
-    column_width = (WIDTH - 3 * gutter) / 4
-    row_height = (bottom - top) / 4
+    columns = 4
+    rows = (len(STORIES) + columns - 1) // columns
+    column_width = (WIDTH - (columns - 1) * gutter) / columns
+    row_height = (bottom - top) / rows
     highlights = {1, 2, 3, 7, 9}
-    for column in range(4):
+    for column in range(columns):
         x = round(LEFT + column * (column_width + gutter))
         edge = round(LEFT + column * (column_width + gutter) + column_width)
         if column:
             draw.line((x - gutter // 2, top + 1, x - gutter // 2, bottom), fill=LIGHT)
-        for row in range(4):
-            index = 4 * row + column
+        for row in range(rows):
+            index = columns * row + column
+            if index >= len(STORIES):
+                break
             number = index + 1
             dateline, headline, body = STORIES[index]
-            y = round(top + row * row_height) + 6
+            y = round(top + row * row_height) + 2
             accent = RED if number in highlights else INK
-            draw.rectangle((x, y, x + 19, y + 13), fill=accent)
-            draw.text((x + 9.5, y + 7), f"{number:02}",
-                      font=font("SansMono-Bold", 9), fill=PAPER, anchor="mm")
-            draw.text((x + 25, y + 3), dateline, font=font("SansMono", 9),
+            draw.rectangle((x, y, x + 17, y + 8), fill=accent)
+            draw.text((x + 8.5, y + 4), f"{number:02}",
+                      font=font("SansMono-Bold", 8), fill=PAPER, anchor="mm")
+            draw.text((x + 22, y + 1), dateline, font=font("SansMono", 8),
                       fill=RED if number in highlights else GRAY, anchor="lt")
-            if block(draw, x, y + 17, headline, font("Serif-Bold", 14),
-                     edge - x, 15, INK) != 1:
+            if block(draw, x, y + 11, headline, font("Serif-Bold", 13),
+                     edge - x, 14, INK) != 1:
                 raise ValueError(f"Headline exceeds its column: {headline}")
-            block(draw, x, y + 34, body, font("Sans", 10), edge - x, 10, BODY_INK, limit=5)
-            if row < 3:
+            body_font = font("Sans", 9)
+            body_width = edge - x
+            max_lines = 4 if number <= 16 else 3
+            leading = 8 if max_lines == 4 and len(wrap(body, body_font, body_width)) > 3 else 10
+            block(draw, x, y + 24, body, body_font, body_width, leading, BODY_INK, limit=max_lines)
+            if row < rows - 1:
                 rule_y = round(top + (row + 1) * row_height)
                 draw.line((x, rule_y, edge, rule_y), fill=LIGHT)
 
