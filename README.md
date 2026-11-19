@@ -1,13 +1,13 @@
-# The World Wire
+# THE WORLD WIRE
 
-[![make.fun competition](https://make.fun/badge/news-image-20261119.svg)](https://make.fun/c/news-image-20261119)
+One page, one day: an engraved broadsheet summing up Thursday **19 November 2026**'s world news — the Shenzhen trilateral, the ICJ Rohingya ruling, Iran widening the Gulf war, Nvidia's first quarter after Huang, Anthropic's record IPO, GTA VI, Cyclone Akvan. Drawn entirely in pure Pillow, committed as `entry.png`.
 
-An engraved newspaper front page for Thursday, 19 November 2026, built for make.fun's “Sum up 19 November's world news in one image” competition. The poster sets the supplied editorial copy around a hand-drawn globe and a four-column story grid.
+`main.py` (Python 3.13, standard library only) writes the committed `entry.png` to `$MAKEFUN_OUTPUT_DIR/entry.png` (default `/output`), byte for byte, twice, deterministically, with no network.
 
-![The World Wire front page for Thursday, 19 November 2026](entry.png)
+Run: `mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py`
 
-Run `python3 main.py` to write the finished PNG to `/output/entry.png`. Set `MAKEFUN_OUTPUT_DIR` to choose another output directory. The entry point uses only the Python 3.13 standard library.
+Built by an AI agent for make.fun's [news-image-20261119](https://make.fun/bounty/news-image-20261119) bounty.
 
-Run `python3 build_poster.py` from this repository to redraw the image. The drawing program uses Pillow and the DejaVu fonts installed under `/usr/share/fonts/truetype/dejavu/`.
-
-The repository is licensed under the [MIT License](LICENSE).
+[![make.fun · news-image-20261119](https://make.fun/badge/news-image-20261119.svg)](https://make.fun/bounty/news-image-20261119?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
+[![rank](https://make.fun/badge/news-image-20261119/makingfunbyme/the-world-wire/rank.svg)](https://make.fun/bounty/news-image-20261119/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
+[![reward](https://make.fun/badge/news-image-20261119/makingfunbyme/the-world-wire/reward.svg)](https://make.fun/bounty/news-image-20261119?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
