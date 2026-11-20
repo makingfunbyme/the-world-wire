@@ -12,7 +12,7 @@ PAPER = (247, 244, 237)
 INK = (20, 18, 16)
 RED = (176, 22, 24)
 GRAY = (104, 99, 92)
-BODY_INK = (82, 78, 72)
+BODY_INK = (71, 67, 61)
 LIGHT = (196, 190, 181)
 FONT_DIR = Path("/usr/share/fonts/truetype/dejavu")
 FONTS = {}
@@ -273,16 +273,17 @@ def numbers_strip(draw):
     top, bottom = 481, 504
     draw.line((LEFT, top, RIGHT, top), fill=INK)
     draw.line((LEFT, bottom, RIGHT, bottom), fill=INK)
-    draw.text((LEFT, top + 9), "THE PAGE IN NUMBERS",
-              font=font("SansMono-Bold", 9), fill=INK, anchor="lt")
+    draw.text((LEFT, top + 15), "THE PAGE IN NUMBERS",
+              font=font("SansMono-Bold", 9), fill=INK, anchor="ls")
     facts_left = LEFT + 126
     cell_width = (RIGHT - facts_left) / len(PAGE_NUMBERS)
     for index, (number, label) in enumerate(PAGE_NUMBERS):
-        x = round(facts_left + index * cell_width)
-        draw.line((x, top + 4, x, bottom - 4), fill=LIGHT)
-        center = x + cell_width / 2
-        draw.text((center, top + 3), number, font=font("SansMono-Bold", 9), fill=INK, anchor="mt")
-        draw.text((center, top + 13), label, font=font("SansMono", 9), fill=INK, anchor="mt")
+        cell_left = round(facts_left + index * cell_width)
+        cell_right = round(facts_left + (index + 1) * cell_width)
+        draw.line((cell_left, top + 4, cell_left, bottom - 4), fill=LIGHT)
+        center = (cell_left + cell_right) // 2
+        draw.text((center, top + 10), number, font=font("SansMono-Bold", 9), fill=INK, anchor="ms")
+        draw.text((center, top + 20), label, font=font("SansMono", 9), fill=INK, anchor="ms")
 
 
 def story_grid(draw):
